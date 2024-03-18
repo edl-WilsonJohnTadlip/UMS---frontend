@@ -4,7 +4,8 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
 import { UserInterface } from '../user.interface';
-import { AuthService } from '../auth.service';
+import { AuthService } from '../service/auth.service';
+
 
 @Component({
   selector: 'app-login',
@@ -13,6 +14,7 @@ import { AuthService } from '../auth.service';
 })
 export class LoginComponent implements OnInit {
   form: FormGroup;
+  role: string[];
 
   constructor(
     private formBuilder: FormBuilder,
@@ -30,14 +32,36 @@ export class LoginComponent implements OnInit {
   }
 
   onSubmit(): void {
-    this.http.post<{access_token: string}>('http://127.0.0.1:8000/api/auth/login/', this.form.getRawValue(),)
-      .subscribe( (response) => 
-      {
-        console.log(response);
-        localStorage.setItem('token', response.access_token);
-        // localStorage.setItem('Role', response.user.role);
-        // this.authService.currentUserAuth.set(response.UserInterface);
-        this.router.navigate(['home']);
-      }); 
+    this.authService.login(this.form.getRawValue())
+      .subscribe({
+        next: response => {
+          console.log(response); // Optional: Log the response for debugging purposes
+  
+          // The token and role are already stored in localStorage by the AuthService
+          // No need to set them again here
+  
+          const role = this.authService.getUserRole(); // Get the user's role from the AuthService
+  
+          // Route the user to the appropriate component based on their role
+          switch (role) {
+            case 'admin':
+              this.router.navigate(['admin']);
+              break;
+            case 'supervisor':
+              this.router.navigate(['supervisor']);
+              break;
+            case 'user':
+              this.router.navigate(['user']);
+              break;
+            default:
+              this.router.navigate(['login']); // Handle other roles or unauthorized access
+              break;
+          }
+        },
+        error: error => {
+          // Handle login errors here (e.g., display error message to the user)
+          console.error('Login failed:', error);
+        }
+      });
   }
 }

@@ -3,7 +3,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { UserInterface } from '../user.interface';
-import { AuthService } from '../auth.service';
+import { AuthService } from '../service/auth.service';
 
 @Component({
   selector: 'app-register',
@@ -44,7 +44,6 @@ export class RegisterComponent {
       .subscribe((response) => 
       {
         console.log('response', response);
-        this.authService.currentUserAuth.set(response.UserInterface);
         this.router.navigate(['/login']);
       }); 
   }
