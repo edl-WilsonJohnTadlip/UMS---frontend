@@ -6,7 +6,6 @@ import { AppComponent } from './app.component';
 import { RegisterComponent } from './register/register.component';
 import { LoginComponent } from './login/login.component';
 import { HomeComponent } from './home/home.component';
-import { NavComponent } from './nav/nav.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
 import { AdminComponent } from './admin/admin.component';
@@ -23,7 +22,6 @@ import { DashboardComponent } from './admin/dashboard/dashboard.component';
     RegisterComponent,
     LoginComponent,
     HomeComponent,
-    NavComponent,
     AdminComponent,
     SupervisorComponent,
     UserComponent,

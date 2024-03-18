@@ -35,6 +35,9 @@ export class RegisterComponent {
     })
   }
   
+  handleValidation() {
+    
+  }
 
   onSubmit(): void {
     this.http.post<{UserInterface: any}>('http://127.0.0.1:8000/api/auth/register/', this.form.getRawValue())

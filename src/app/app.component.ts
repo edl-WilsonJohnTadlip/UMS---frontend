@@ -1,5 +1,8 @@
 import { Component } from '@angular/core';
 import { OnInit } from '@angular/core';
+import { AuthService } from './auth.service';
+import { Router } from '@angular/router';
+import { inject } from '@angular/core';
 
 import { initFlowbite } from 'flowbite';
 
@@ -10,9 +13,18 @@ import { initFlowbite } from 'flowbite';
 })
 export class AppComponent implements OnInit {
   title = 'project-user-management-frontend';
+  authService = inject(AuthService);
+
+  constructor(private router: Router) { }
 
   ngOnInit(): void {
     initFlowbite();
+  }
+
+  logout(){
+    localStorage.setItem('token', '');
+    this.authService.currentUserAuth.set(null);
+    this.router.navigate(['/login']);
   }
 
 }
