@@ -26,7 +26,7 @@ export class AppComponent implements OnInit {
 
   toggleMenu(){
     let currentPage = this.router.url;
-    console.log(currentPage);
+    // console.log(currentPage);
     let isRole = localStorage.getItem('role');
     if (currentPage === '/login' || currentPage === '/register') {
       this.isMenuVisible = false;
@@ -57,21 +57,3 @@ export class AppComponent implements OnInit {
 }
 
 
-
-  // toggleMenu(){
-  //   let currentPage = this.router.url;
-  //   let storedRole = localStorage.getItem('role');
-    
-  //   this.isMenuVisible = !(currentPage === '/login' || currentPage === '/register');
-    
-  //   switch (storedRole) {
-  //     case 'admin':
-  //     case 'supervisor':
-  //     case 'user':
-  //       this.isRole = true;
-  //       break;
-  //     default:
-  //       this.isRole = false;
-  //       break;
-  //   }
-  // }

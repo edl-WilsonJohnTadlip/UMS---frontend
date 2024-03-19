@@ -41,20 +41,20 @@ export class LoginComponent implements OnInit {
           // No need to set them again here
   
           const role = this.authService.getUserRole(); // Get the user's role from the AuthService
-  
+          
           // Route the user to the appropriate component based on their role
           switch (role) {
-            case 'admin':
+            case 'Admin':
               this.router.navigate(['admin']);
               break;
-            case 'supervisor':
+            case 'Supervisor':
               this.router.navigate(['supervisor']);
               break;
-            case 'user':
+            case 'User':
               this.router.navigate(['user']);
               break;
             default:
-              this.router.navigate(['login']); // Handle other roles or unauthorized access
+              this.router.navigate(['/admin']); // Handle other roles or unauthorized access
               break;
           }
         },

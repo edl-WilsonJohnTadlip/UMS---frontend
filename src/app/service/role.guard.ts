@@ -1,5 +1,3 @@
-// role.guard.ts
-
 import { Injectable } from '@angular/core';
 import { CanActivate, ActivatedRouteSnapshot, RouterStateSnapshot, Router } from '@angular/router';
 import { AuthService } from './auth.service';
@@ -12,21 +10,29 @@ export class RoleGuard implements CanActivate {
   constructor(private authService: AuthService, private router: Router) {}
 
   canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): boolean {
-    const expectedRole = route.data.expectedRole;
-
     // Check if user is logged in
     if (!this.authService.isLoggedIn()) {
       this.router.navigate(['/login']);
       return false;
     }
 
-    // Retrieve user's role from AuthService
-    const userRole = this.authService.getUserRole();
+    // Retrieve expected role from route data
+    const expectedRole = route.data.expectedRole.toLowerCase();
+    console.log('expectedRole', expectedRole);
 
-    // Check if user's role matches the expected role
-    if (userRole !== expectedRole) {
-      // Redirect to unauthorized page or handle as needed
-      this.router.navigate(['/unauthorized']);
+    // Retrieve user's role from AuthService and convert to lowercase
+    const userRole = this.authService.getUserRole().toLowerCase(); // Use optional chaining to avoid errors if role is null
+    console.log('userRole', userRole);
+
+    // Log the route data before navigating
+    // console.log("Route Data:", route.data); // Log the route data
+
+    // Check if user's role is available and matches the expected role (case-insensitive)
+    if (userRole === null || userRole !== expectedRole) {
+      // User's role does not match the expected role, redirect to unauthorized page
+      console.error('Unauthorized page for current logged in User');
+      this.router.navigate(['/login']); // Redirect to login page
+      // this.authService.logout(); // Clear stored token and role from local storage
       return false;
     }
 
@@ -34,3 +40,4 @@ export class RoleGuard implements CanActivate {
     return true;
   }
 }
+
