@@ -17,5 +17,4 @@ export class UserProfileService {
     const url = `${this.apiUrl}/${role.toLowerCase()}/profile`;
     return this.http.get<any>(url);
   }
-
 }

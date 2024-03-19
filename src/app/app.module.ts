@@ -14,6 +14,8 @@ import { UserComponent } from './user/user.component';
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
 import { ProfileComponent } from './admin/profile/profile.component';
 import { DashboardComponent } from './admin/dashboard/dashboard.component';
+import { MatCardModule } from '@angular/material/card';
+import { MatButtonModule } from '@angular/material/button';
 
 
 @NgModule({
@@ -33,7 +35,9 @@ import { DashboardComponent } from './admin/dashboard/dashboard.component';
     AppRoutingModule,
     FormsModule,
     ReactiveFormsModule,
-    HttpClientModule
+    HttpClientModule,
+    MatCardModule,
+    MatButtonModule
   ],
   providers: [
     provideAnimationsAsync()
