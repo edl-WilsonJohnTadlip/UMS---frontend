@@ -1,4 +1,16 @@
 <section class="bg-gray-50 dark:bg-gray-900">
+    <div *ngIf="generalErrorMessage" id="toast-top-right" class="fixed flex items-center w-full max-w-xs p-4 space-x-4 text-gray-500 bg-white divide-x rtl:divide-x-reverse divide-gray-200 rounded-lg shadow top-5 right-5 dark:text-gray-400 dark:divide-gray-700 space-x dark:bg-gray-800" role="alert">
+        <svg class="w-5 h-5 text-red-500" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
+            <path d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5Zm3.707 11.793a1 1 0 1 1-1.414 1.414L10 11.414l-2.293 2.293a1 1 0 0 1-1.414-1.414L8.586 10 6.293 7.707a1 1 0 0 1 1.414-1.414L10 8.586l2.293-2.293a1 1 0 0 1 1.414 1.414L11.414 10l2.293 2.293Z"/>
+        </svg>
+        <div class="text-sm font-normal">{{ generalErrorMessage }}</div>
+    </div>
+    <div *ngIf="generalSuccessMessage" id="toast-top-right" class="fixed flex items-center w-full max-w-xs p-4 space-x-4 text-gray-500 bg-white divide-x rtl:divide-x-reverse divide-gray-200 rounded-lg shadow top-5 right-5 dark:text-gray-400 dark:divide-gray-700 space-x dark:bg-gray-800" role="alert">
+        <svg class="w-5 h-5 text-green-500" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
+            <path fill-rule="evenodd" d="M10 0a10 10 0 1 1 0 20 10 10 0 0 1 0-20zm4.95 7.344l-6.16 7.57a1 1 0 0 1-1.55 0l-3.98-4.86a1 1 0 0 1 1.56-1.278l3.07 3.74 5.71-7.03a1 1 0 1 1 1.56 1.278z"/>
+        </svg>
+        <div class="text-sm font-normal">{{ generalSuccessMessage }}</div>
+    </div>
     <div class="flex flex-col items-center justify-center px-6 py-2 mx-auto md:h-screen md:py-0">
         <div class="w-4/5 bg-white rounded-lg shadow dark:border md:mt-0 sm:max-w-md xl:p-0 dark:bg-gray-800 dark:border-gray-700">
             <div class="p-6 space-y-4 md:space-y-6 sm:p-8">
@@ -9,34 +21,59 @@
                 <div class="relative z-0 w-full mb-5 group">
                     <input formControlName="email" type="email" name="floating_email" id="floating_email" class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer" placeholder=" " required />
                     <label for="floating_email" class="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">Email address</label>
+                    <!-- Error message -->
+                    <div *ngIf="form.controls['email'].invalid && (form.controls['email'].dirty || form.controls['email'].touched)" class="text-red-500 text-xs mt-1">
+                        <div *ngIf="form.controls['email'].errors?.required">Email is required.</div>
+                        <div *ngIf="form.controls['email'].errors?.email">Invalid email format.</div>
+                    </div>
                 </div>
                 <div class="relative z-0 w-full mb-5 group">
                     <input formControlName="password" type="password" name="floating_password" id="floating_password" class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer" placeholder=" " required />
                     <label for="floating_password" class="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">Password</label>
+                    <!-- Error message for required and password minimum length -->
+                    <div *ngIf="form.controls['password'].hasError('minlength')" class="text-red-500 text-xs mt-1">Password must be at least 6 characters long.</div>
+                    <div *ngIf="form.controls['password'].invalid && (form.controls['password'].dirty || form.controls['password'].touched) && form.controls['password'].hasError('required')" class="text-red-500 text-xs mt-1">Password is required.</div>
                 </div>
                 <div class="relative z-0 w-full mb-5 group">
-                    <input type="password" name="repeat_password" id="floating_repeat_password" class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer" placeholder=" " required />
+                    <input formControlName="confirm_password" type="password" name="repeat_password" id="floating_repeat_password" class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer" placeholder=" " required />
                     <label for="floating_repeat_password" class="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">Confirm password</label>
+                    <!-- Error message for required and password mismatch -->
+                    <div *ngIf="form.controls['confirm_password'].invalid && (form.controls['confirm_password'].dirty || form.controls['confirm_password'].touched) && form.controls['confirm_password'].hasError('required')" class="text-red-500 text-xs mt-1">Confirm password is required.</div>
+                    <div *ngIf="form.hasError('passwordMismatch')" class="text-red-500 text-xs mt-1">Passwords do not match.</div>
                 </div>
                 <div class="grid md:grid-cols-2 md:gap-6">
                 <div class="relative z-0 w-full mb-5 group">
                     <input formControlName="fname" type="text" name="floating_first_name" id="floating_first_name" class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer" placeholder=" " required />
                     <label for="floating_first_name" class="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">First name</label>
+                    <!-- Error message for first name required -->
+                    <div *ngIf="form.controls['fname'].invalid && (form.controls['fname'].dirty || form.controls['fname'].touched) && form.controls['fname'].hasError('required')" class="text-red-500 text-xs mt-1">First name is required.</div>
                 </div>
                 <div class="relative z-0 w-full mb-5 group">
                     <input formControlName="lname" type="text" name="floating_last_name" id="floating_last_name" class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer" placeholder=" " required />
                     <label for="floating_last_name" class="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">Last name</label>
+                    <!-- Error message for last name required -->
+                    <div *ngIf="form.controls['lname'].invalid && (form.controls['lname'].dirty || form.controls['lname'].touched) && form.controls['lname'].hasError('required')" class="text-red-500 text-xs mt-1">First name is required.</div>
                 </div>
                 </div>
                 <div class="relative z-0 w-full mb-5 group">
-                    <input formControlName="address" type="text" name="" id="" class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer" placeholder=" " required />
+                    <input formControlName="address" type="text" name="address" id="address" class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer" placeholder=" " required />
                     <label for="floating_email" class="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">Address</label>
+                    <!-- Error message for address required -->
+                    <div *ngIf="form.controls['lname'].invalid && (form.controls['lname'].dirty || form.controls['lname'].touched) && form.controls['lname'].hasError('required')" class="text-red-500 text-xs mt-1">Address is required.</div>
                 </div>
                 <div class="grid md:grid-cols-2 md:gap-6">
+                <!-- <div class="relative z-0 w-full mb-5 group">
+                    <input formControlName="phonenumber" type="tel" pattern="[0-9]{3}-[0-9]{3}-[0-9]{4}" name="floating_phone" id="floating_phone" class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer" placeholder=" " required />
+                    <label for="floating_phone" class="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">Phone # (10 digits)</label>
+                </div> -->
                 <div class="relative z-0 w-full mb-5 group">
                     <input formControlName="phonenumber" type="tel" pattern="[0-9]{3}-[0-9]{3}-[0-9]{4}" name="floating_phone" id="floating_phone" class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer" placeholder=" " required />
                     <label for="floating_phone" class="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">Phone # (10 digits)</label>
-                </div>
+                    <!-- Error message for phone number required -->
+                    <div *ngIf="form.controls['phonenumber'].invalid && (form.controls['phonenumber'].dirty || form.controls['phonenumber'].touched)" class="text-red-500 text-xs mt-1">Phone number is required.</div>
+                    <!-- Error message for phone number pattern -->
+                    <div *ngIf="form.controls['phonenumber'].hasError('pattern')" class="text-red-500 text-xs mt-1">Invalid phone number format. Please enter in the format XXX-XXX-XXXX.</div>
+                  </div>
                 <div class="relative z-0 w-full mb-5 group">
                     <div class="relative z-0 w-full mb-5 group">
                         <select formControlName="gender" id="countries" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
@@ -45,6 +82,8 @@
                         <option>Female</option>
                         <option>Others</option>
                         </select>
+                        <!-- Error message for address required -->
+                        <div *ngIf="form.controls['gender'].invalid && (form.controls['gender'].dirty || form.controls['gender'].touched) && form.controls['gender'].hasError('required')" class="text-red-500 text-xs mt-1">Gender is required.</div>
                     </div>
                 </div>
                 </div>
@@ -52,6 +91,8 @@
                     <div class="relative z-0 w-full mb-5 group">
                         <input formControlName="age" type="text" name="floating_age" id="floating_age" class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer" placeholder=" " required />
                         <label for="floating_age" class="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">Age</label>
+                        <!-- Error message for age required -->
+                        <div *ngIf="form.controls['age'].invalid && (form.controls['age'].dirty || form.controls['age'].touched) && form.controls['age'].hasError('required')" class="text-red-500 text-xs mt-1">Age is required.</div>
                     </div>
                     <div class="relative z-0 w-full mb-5 group">
                         <select formControlName="role" id="role" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
@@ -60,9 +101,15 @@
                         <option>Supervisor</option>
                         <option>User</option>
                         </select>
+                        <!-- Error message for address required -->
+                        <div *ngIf="form.controls['role'].invalid && (form.controls['role'].dirty || form.controls['role'].touched) && form.controls['role'].hasError('required')" class="text-red-500 text-xs mt-1">Address is required.</div>
                     </div>
                 </div>
-                <button type="submit" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full  px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Submit</button>
+                <div *ngIf="generalErrorMessage" class="text-red-500 text-xs mt-1">{{ generalErrorMessage }}</div>
+                <button type="submit" class="w-full text-white bg-primary-600 hover:bg-primary-700 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800 mb-4 mt-5">Create an account</button>
+                <p class="text-sm font-light text-gray-500 dark:text-gray-400">
+                    Already have an account? <a href='/login' class="font-medium text-white hover:underline dark:text-white-500">Login here</a>
+                </p>
             </form>
             </div>
         </div>
