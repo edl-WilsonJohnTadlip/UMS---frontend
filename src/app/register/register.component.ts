@@ -44,11 +44,6 @@ export class RegisterComponent {
       validator: this.passwordMatchValidator // Add custom validator to check password match
     });
   }
-  
-  handleValidation() {
-    
-  }
-
 
 
 
@@ -68,13 +63,17 @@ export class RegisterComponent {
     // Log validity state of each form control
     Object.keys(this.form.controls).forEach(key => {
       console.log(`${key} validity:`, this.form.controls[key].valid);
+      console.log(`${key} validity:`, this.form.controls[key].valid);
+      console.log(`${key} dirty:`, this.form.controls[key].dirty);
+      console.log(`${key} touched:`, this.form.controls[key].touched);
   });
     // Check if the form is valid before submitting
     if (this.form.valid) {
       // Remove dashes from the phone number
-      const phoneNumberWithoutDashes = this.form.get('phonenumber').value.replace(/-/g, '');
-      // Update the phone number value in the form
-      this.form.get('phonenumber').patchValue(phoneNumberWithoutDashes);
+      // const phoneNumberWithoutDashes = String(this.form.get('phonenumber').value).replace(/-/g, '');
+      // // Update the phone number value in the form
+      // this.form.get('phonenumber').patchValue(phoneNumberWithoutDashes);
+      // console.log('phonenumber', phoneNumberWithoutDashes);
 
       this.http.post<{UserInterface: any}>('http://127.0.0.1:8000/api/auth/register/', this.form.getRawValue())
       .subscribe((response) => 
