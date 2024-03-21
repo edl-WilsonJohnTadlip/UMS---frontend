@@ -54,7 +54,7 @@ export class LoginComponent implements OnInit {
               this.router.navigate(['user']);
               break;
             default:
-              this.router.navigate(['/admin']); // Handle other roles or unauthorized access
+              this.router.navigate(['/login']); // Handle other roles or unauthorized access
               break;
           }
         },

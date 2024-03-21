@@ -1,5 +1,3 @@
-
-
 <nav class="fixed top-0 z-50 w-full bg-white border-b border-gray-200 dark:bg-gray-800 dark:border-gray-700">
     <div class="px-3 py-3 lg:px-5 lg:pl-3">
       <div class="flex items-center justify-between">
@@ -42,7 +40,7 @@
                     <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-600 dark:hover:text-white" role="menuitem">Earnings</a>
                   </li>
                   <li>
-                    <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-600 dark:hover:text-white" role="menuitem">Sign out</a>
+                    <a (click)="logout()" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-600 dark:hover:text-white" role="menuitem">Sign out</a>
                   </li>
                 </ul>
               </div>
@@ -102,8 +100,8 @@
      </div>
   </aside>
   
-  <div class="p-4 sm:ml-64">
-     <div class="p-4 border-2 border-gray-200 border-dashed rounded-lg dark:border-gray-700 mt-14">
+  <div class=" sm:ml-64">
+     <div class="p-4 border-2 border-gray-200 dark:border-gray-700 mt-14">
         <!-- <div class="grid grid-cols-3 gap-4 mb-4">
            <div class="flex items-center justify-center h-24 rounded bg-gray-50 dark:bg-gray-800">
               <p class="text-2xl text-gray-400 dark:text-gray-500">
@@ -128,14 +126,15 @@
            </div>
         </div> -->
         
-        <!-- 3/4 of the card -->
-        <div class="flex gap-4 mb-4">
-            <div class="w-3/4 rounded bg-gray-50 h-screen dark:bg-gray-800 p-5">
+        <!--    -----          first card      -----         -->
+        <div *ngIf="adminProfile" class="flex gap-4 mb-4">
+         <!--    -----         3/4 of the first card      -----         -->
+            <div class="w-3/4 bg-gray-50 h-screen dark:bg-gray-800 p-5">
                <p class="text-lg text-gray-300">
-                  Welcome back, User!
+                  Welcome back, {{ adminProfile.fname }}!
                </p>
-               <h2 class="text-xl text-gray-300 pt-12">
-                Your Profile
+               <h2 class="text-2xl text-gray-300 pt-12 pb-2 text-center">
+                Your Personal Profile
                </h2>
             <div class="flex flex-wrap">
                <!-- 1st row -->
@@ -143,7 +142,7 @@
                       <mat-card class="no-rounded">
                         <mat-card-header>
                         <mat-card-subtitle class="text-blue">First Name</mat-card-subtitle>
-                        <mat-card-title>Shiba Inu</mat-card-title>
+                        <mat-card-title> {{ adminProfile.fname }} </mat-card-title>
                         </mat-card-header>
                       </mat-card>
                </div>
@@ -151,7 +150,7 @@
                   <mat-card class="no-rounded">
                      <mat-card-header>
                      <mat-card-subtitle class="text-blue">Last Name</mat-card-subtitle>
-                     <mat-card-title>Shiba Inu</mat-card-title>
+                     <mat-card-title>{{ adminProfile.lname }}</mat-card-title>
                      </mat-card-header>
                   </mat-card>
                </div>
@@ -160,7 +159,7 @@
                   <mat-card class="no-rounded">
                      <mat-card-header class="no-rounded bg-white">
                        <mat-card-subtitle class="text-blue">Address</mat-card-subtitle>
-                       <mat-card-title>Shiba Inu</mat-card-title>
+                       <mat-card-title>{{ adminProfile.address }}</mat-card-title>
                      </mat-card-header>
                   </mat-card>
                </div>
@@ -169,7 +168,7 @@
                   <mat-card class="no-rounded">
                      <mat-card-header class="no-rounded bg-white">
                        <mat-card-subtitle class="text-blue">Email</mat-card-subtitle>
-                       <mat-card-title>Shiba Inu</mat-card-title>
+                       <mat-card-title>{{ adminProfile.fname }}</mat-card-title>
                      </mat-card-header>
                   </mat-card>
                </div>
@@ -177,7 +176,7 @@
                   <mat-card class="no-rounded">
                      <mat-card-header class="no-rounded bg-white">
                        <mat-card-subtitle class="text-blue">Phone Number</mat-card-subtitle>
-                       <mat-card-title>Shiba Inu</mat-card-title>
+                       <mat-card-title>{{ adminProfile.phonenumber }}</mat-card-title>
                      </mat-card-header>
                   </mat-card>    
                </div>
@@ -186,7 +185,7 @@
                   <mat-card class="no-rounded">
                    <mat-card-header class="no-rounded bg-white">
                      <mat-card-subtitle class="text-blue">Gender</mat-card-subtitle>
-                     <mat-card-title>Shiba Inu</mat-card-title>
+                     <mat-card-title>{{ adminProfile.gender }}</mat-card-title>
                    </mat-card-header>
                   </mat-card>
                </div>
@@ -194,14 +193,14 @@
                   <mat-card class="no-rounded">
                    <mat-card-header class="no-rounded bg-white">
                      <mat-card-subtitle class="text-blue">Age</mat-card-subtitle>
-                     <mat-card-title>Shiba Inu</mat-card-title>
+                     <mat-card-title>{{ adminProfile.age }}</mat-card-title>
                    </mat-card-header>
                   </mat-card>
                </div>
             </div>
          </div>
-         <!-- 1/4 -->
-         <div class="w-1/4 flex items-center justify-center rounded bg-gray-50 h-screen dark:bg-gray-800">
+         <!--    -----         1/4 of the first card      -----         -->
+         <div class="w-1/4 flex items-center justify-center bg-gray-50 h-screen dark:bg-gray-800">
             <p class="text-2xl text-gray-400 dark:text-gray-500">
                <svg class="w-3.5 h-3.5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 18 18">
                   <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 1v16M1 9h16"/>
@@ -210,8 +209,8 @@
          </div>
          </div>
 
-
-        <div class="flex items-center justify-center h-48 mb-4 rounded bg-gray-50 dark:bg-gray-800">
+         <!--    -----         SECOND CARD      -----         -->
+        <div class="flex items-center justify-center h-48 mb-4  bg-gray-50 dark:bg-gray-800">
            <p class="text-2xl text-gray-400 dark:text-gray-500">
               <svg class="w-3.5 h-3.5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 18 18">
                  <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 1v16M1 9h16"/>
@@ -221,7 +220,7 @@
 
         
 
-        <div class="flex items-center justify-center h-48 mb-4 rounded bg-gray-50 dark:bg-gray-800">
+        <div class="flex items-center justify-center h-48 mb-4 bg-gray-50 dark:bg-gray-800">
            <p class="text-2xl text-gray-400 dark:text-gray-500">
               <svg class="w-3.5 h-3.5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 18 18">
                  <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 1v16M1 9h16"/>
@@ -229,7 +228,7 @@
            </p>
         </div>
         <div class="grid grid-cols-2 gap-4">
-           <div class="flex items-center justify-center rounded bg-gray-50 h-28 dark:bg-gray-800">
+           <div class="flex items-center justify-center  bg-gray-50 h-28 dark:bg-gray-800">
               <p class="text-2xl text-gray-400 dark:text-gray-500">
                  <svg class="w-3.5 h-3.5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 18 18">
                     <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 1v16M1 9h16"/>

@@ -8,6 +8,7 @@ import { tap } from 'rxjs/operators';
 })
 export class AuthService {
   private apiUrl = 'http://127.0.0.1:8000/api/auth'; // backend API URL
+  private userId: number | null = null; // User ID stored in memory
 
   constructor(private http: HttpClient) { }
 
@@ -17,6 +18,7 @@ export class AuthService {
         if (response && response.access_token) {
           localStorage.setItem('token', response.access_token);
           localStorage.setItem('role', response.role[0]);
+          localStorage.setItem('user_id', response.user_id.toString());      
         }
       })
     );
@@ -25,6 +27,7 @@ export class AuthService {
   logout(): void {
     localStorage.removeItem('token');
     localStorage.removeItem('role');
+    localStorage.removeItem('user_id');
   }
 
   isLoggedIn(): boolean {
@@ -37,5 +40,10 @@ export class AuthService {
 
   getToken(): string | null {
     return localStorage.getItem('token');
+  }
+
+  getUserId(): number | null {
+    const userIdStr = localStorage.getItem('user_id');
+    return userIdStr ? parseInt(userIdStr, 10) : null;
   }
 }
