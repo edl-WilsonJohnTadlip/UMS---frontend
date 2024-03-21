@@ -2,7 +2,10 @@ import { Component } from '@angular/core';
 import { UserProfileService } from '../service/user-profile.service';
 import { AuthService } from '../service/auth.service';
 import { Router } from '@angular/router';
-
+import { FormGroup, FormControl, Validators } from '@angular/forms';
+import { FormBuilder } from '@angular/forms';
+import { tap, throwError } from 'rxjs';
+import { catchError } from 'rxjs/operators';
 
 @Component({
   selector: 'app-admin',
@@ -12,22 +15,76 @@ import { Router } from '@angular/router';
 
 export class AdminComponent {
 
+  users: any[] = [];
   adminProfile: any;
+  selectedGender: string | null = null;
+  profileForm: FormGroup; // Define profileForm as a FormGroup
 
   constructor(
+    private formBuilder: FormBuilder,
     private userProfileService: UserProfileService,
     private authService: AuthService,
     private router: Router
   ){}
 
   ngOnInit(): void {
-    // this.getUserProfile();
-    // Retrieve the admin user ID from the authentication service
+    this.initializeAdminProfile();
+    this.initializeForm(); // Initialize the form
+    this.fetchUsers(); // Fetch users
+  }
+
+  initializeForm(): void {
+    // Initialize profileForm with empty values or default values
+    this.profileForm = this.formBuilder.group({
+      email: ['', Validators.required],
+      password: ['', [Validators.required, Validators.minLength(6)]],
+      repeat_password: ['', [Validators.required, Validators.minLength(6)]], 
+      fname: ['', Validators.required],
+      lname: ['', Validators.required],
+      address: ['', Validators.required],
+      phonenumber: ['', Validators.required],
+      gender: ['', Validators.required],
+      age: ['', Validators.required],
+      role: ['', Validators.required],
+    });
+  }
+
+  fetchUsers(): void {
+    this.userProfileService.getUsers().subscribe(
+      (data) => {
+        // console.log('Received data:', data);
+        // Assign the data to a property in your component
+        this.users = data.users; // Assuming 'users' is the array of users in the received data
+      },
+      (error) => {
+        console.error('Error fetching users:', error);
+      }
+    );
+  }
+
+  initializeAdminProfile(): void {
+    // Retrieve the user ID from the authentication service
     const userId = this.authService.getUserId();
 
     if (userId !== null) {
-      // Use the retrieved user ID to fetch the admin profile
-      this.getAdminProfile(userId);
+      this.userProfileService.getAdminProfile(userId).subscribe({
+        next: (data) => {
+          this.adminProfile = data;
+          this.profileForm.patchValue({
+            email: this.adminProfile.email,
+            fname: this.adminProfile.fname,
+            lname: this.adminProfile.lname,
+            address: this.adminProfile.address,
+            phonenumber: this.adminProfile.phonenumber,
+            gender: this.adminProfile.gender,
+            age: this.adminProfile.age,
+            role: this.adminProfile.role
+          });
+        },
+        error: (error) => {
+          console.error('Error fetching user profile:', error);
+        }
+      });
     } else {
       console.error('User ID is null.'); // Handle null user ID case
     }
@@ -39,11 +96,98 @@ export class AdminComponent {
     this.userProfileService.getAdminProfile(id).subscribe({
       next: (data) => {
         this.adminProfile = data; // Assign fetched user profile data to userProfile variable
+        // Prefill the form fields with the user's data
+        this.profileForm.patchValue({
+          email: this.adminProfile.email,
+          fname: this.adminProfile.fname,
+          lname: this.adminProfile.lname,
+          address: this.adminProfile.address,
+          phonenumber: this.adminProfile.phonenumber,
+          gender: this.adminProfile.gender,
+          age: this.adminProfile.age,
+          role: this.adminProfile.role,
+      });
+        const genderControl = this.profileForm.get('gender');
+          if (genderControl && this.adminProfile.gender) {
+          genderControl.setValue(this.adminProfile.gender);
+      }
       },
       error: (error) => {
         console.error('Error fetching user profile:', error);
       }
     });
+  }
+
+  onSubmit() {
+    if (this.profileForm.value) {
+      // Prepare the data to be submitted
+      const updatedProfile = this.profileForm.value;
+      const userId = this.authService.getUserId(); // Retrieve the user ID from the authentication service
+      console.log(updatedProfile, userId);
+  
+      if (userId !== null) {
+        // Submit the form data
+        this.userProfileService.updateAdminProfile(userId, updatedProfile).subscribe({
+          next: (response) => {
+            // Handle successful submission
+            console.log('Profile updated successfully:', response);
+            // Optionally, navigate to a success page or display a success message
+            this.router.navigate(['/admin']); // Optionally, navigate to a success page
+          },
+          error: (error) => {
+            // Handle submission errors
+            console.error('Error updating profile:', error);
+            // Optionally, display an error message to the user
+          }
+        });
+      } else {
+        console.error('User ID is null.'); // Handle null user ID case
+      }
+    } else {
+      // Form is invalid, display error messages
+      this.validateAllFormFields(this.profileForm);
+    }
+  }
+
+
+
+  
+  // Helper method to validate all form fields and display error messages
+  validateAllFormFields(formGroup: FormGroup) {
+    Object.keys(formGroup.controls).forEach(field => {
+      const control = formGroup.get(field);
+      if (control instanceof FormControl) {
+        control.markAsTouched({ onlySelf: true });
+      } else if (control instanceof FormGroup) {
+        this.validateAllFormFields(control);
+      }
+    });
+  }
+
+  deleteUser(userId: number) {
+    // Get the ID of the currently logged-in user
+    const currentUserId = this.authService.getUserId();
+
+    // Check if the user is trying to delete their own profile
+    if (userId === currentUserId) {
+        alert('You cannot delete your own profile.');
+        return; // Exit the method early
+    }
+    if (confirm('Are you sure you want to delete this user?')) {
+        this.userProfileService.deleteAdminProfile(userId)
+        .pipe(
+            catchError((error: any) => {
+            // Handle error appropriately
+            console.error('Error deleting user:', error);
+            return throwError(() => error); // Rethrow the error to be caught by the caller
+          })
+        )
+        .subscribe(() => {
+          // Update UI or perform any necessary actions on successful deletion
+          this.router.navigate(['/admin']);
+          console.log('User deleted successfully.');
+        }); // Subscribe to trigger the observable
+      }
   }
 
   logout(): void {
@@ -53,19 +197,5 @@ export class AdminComponent {
 
 }
 
-
-  // ngOnInit(): void {
-  //   // Call the getUserProfile method from the service to fetch user profile data
-  //   this.userProfileService.getUserProfile()
-  //   .subscribe((response) => {
-  //     // Assign the response data to the userProfile variable
-  //       this.userProfile = response;
-  //     },
-  //     (error) =>
-  //       console.error('Error fetching user profile', error)
-  //   )
-  // }
-
-  
 
 

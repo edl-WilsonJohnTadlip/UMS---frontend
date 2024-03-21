@@ -5,7 +5,6 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { RegisterComponent } from './register/register.component';
 import { LoginComponent } from './login/login.component';
-import { HomeComponent } from './home/home.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
 import { AdminComponent } from './admin/admin.component';
@@ -23,7 +22,6 @@ import { MatButtonModule } from '@angular/material/button';
     AppComponent,
     RegisterComponent,
     LoginComponent,
-    HomeComponent,
     AdminComponent,
     SupervisorComponent,
     UserComponent,

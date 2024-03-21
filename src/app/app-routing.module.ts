@@ -13,7 +13,7 @@ const routes: Routes = [
   { path: 'admin', component: AdminComponent, canActivate: [RoleGuard], data: { expectedRole: 'admin' } },
   { path: 'supervisor', component: SupervisorComponent, canActivate: [RoleGuard], data: { expectedRole: 'supervisor' } },
   { path: 'user', component: UserComponent, canActivate: [RoleGuard], data: { expectedRole: 'user' } },
-  { path: '**', redirectTo: '/login' } // Redirect to login page for unknown routes
+  { path: '**', redirectTo: 'login' } // Redirect to login page for unknown routes
 ];
 
 @NgModule({

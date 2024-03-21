@@ -129,7 +129,7 @@
         <!--    -----          first card      -----         -->
         <div *ngIf="adminProfile" class="flex gap-4 mb-4">
          <!--    -----         3/4 of the first card      -----         -->
-            <div class="w-3/4 bg-gray-50 h-screen dark:bg-gray-800 p-5">
+            <div class="w-3/4 bg-gray-50 h-screen dark:bg-gray-800 p-5 flex flex-col">
                <p class="text-lg text-gray-300">
                   Welcome back, {{ adminProfile.fname }}!
                </p>
@@ -196,8 +196,103 @@
                      <mat-card-title>{{ adminProfile.age }}</mat-card-title>
                    </mat-card-header>
                   </mat-card>
+                  
+               </div>
+               
+               
+            </div>
+
+            <!-- <button class="flex justify-center mt-4 bg-gray-600 hover:bg-gray-700 text-white font-bold py-2 px-4 ">
+               Edit Profile
+            </button> -->
+            <button data-modal-target="authentication-modal" data-modal-toggle="authentication-modal" class="mt-4 bg-gray-600 hover:bg-gray-700 text-white font-bold py-2 px-4">
+               Edit Profile
+            </button>
+
+           <!-- Main modal -->
+           <div id="authentication-modal" tabindex="-1" aria-hidden="true" class="hidden overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full">
+            <div class="relative p-4 w-full max-w-md max-h-full">
+            <!-- Modal content -->
+            <div class="relative bg-white rounded-lg shadow dark:bg-gray-700">
+               <!-- Modal header -->
+               <div class="flex items-center justify-between p-4 md:p-5 border-b rounded-t dark:border-gray-600">
+                  <h3 class="text-xl font-semibold text-gray-900 dark:text-white">
+                     Edit Your Profile
+                  </h3>
+                  <!-- close modal -->
+                  <button type="button" class="end-2.5 text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white" data-modal-hide="authentication-modal">
+                     <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14">
+                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"/>
+                     </svg>
+                     <span class="sr-only">Close modal</span>
+                  </button>
+               </div>
+               <!-- Modal body -->
+               <div class="p-4 md:p-5">
+                  <form [formGroup]="profileForm" (ngSubmit)="onSubmit()" >
+                     <div class="relative z-0 w-full mb-5 group">
+                        <input formControlName="email" type="email" name="floating_email" id="floating_email" class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer" placeholder=" " required />
+                        <label for="floating_email" class="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">Email address</label>
+                     </div>
+                     <div class="relative z-0 w-full mb-5 group">
+                        <input formControlName="password" type="password" name="floating_password" id="floating_password" class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer" placeholder=" " required />
+                        <label for="floating_password" class="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">Password</label>
+                     </div>
+                     <div class="relative z-0 w-full mb-5 group">
+                        <input formControlName="repeat_password" type="password" name="repeat_password" id="floating_repeat_password" class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer" placeholder=" " required />
+                        <label for="floating_repeat_password" class="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">Confirm password</label>
+                     </div>
+                     <div class="grid md:grid-cols-2 md:gap-6">
+                        <div class="relative z-0 w-full mb-5 group">
+                           <input formControlName="fname" type="text" name="floating_first_name" id="floating_first_name" class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer" placeholder=" " required />
+                           <label for="floating_first_name" class="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">First name</label>
+                        </div>
+                        <div class="relative z-0 w-full mb-5 group">
+                           <input formControlName="lname" type="text" name="floating_last_name" id="floating_last_name" class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer" placeholder=" " required />
+                           <label for="floating_last_name" class="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">Last name</label>
+                        </div>
+                        </div>
+                        <div class="relative z-0 w-full mb-5 group">
+                           <input formControlName="address" type="text" name="" id="" class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer" placeholder=" " required />
+                           <label for="floating_email" class="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">Address</label>
+                        </div>
+                        <div class="grid md:grid-cols-2 md:gap-6">
+                        <div class="relative z-0 w-full mb-5 group">
+                           <input formControlName="phonenumber" type="tel" pattern="[0-9]{3}-[0-9]{3}-[0-9]{4}" name="floating_phone" id="floating_phone" class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer" placeholder=" " required />
+                           <label for="floating_phone" class="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">Phone # (10 digits)</label>
+                        </div>
+                        <div class="relative z-0 w-full mb-5 group">
+                           <div class="relative z-0 w-full mb-5 group">
+                              <select formControlName="gender" id="countries" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                                 <option [value]="null" disabled>Gender</option>
+                                 <option [value]="'Male'">Male</option>
+                                 <option [value]="'Female'">Female</option>
+                                 <option [value]="'Others'">Others</option>
+                             </select>
+                           </div>
+                        </div>
+                        </div>
+                        <div class="grid md:grid-cols-2 md:gap-6">
+                           <div class="relative z-0 w-full mb-5 group">
+                              <input formControlName="age" type="text" name="floating_age" id="floating_age" class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer" placeholder=" " required />
+                              <label for="floating_age" class="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">Age</label>
+                           </div>
+                           <div class="relative z-0 w-full mb-5 group">
+                              <select formControlName="role" id="role" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                              <option value="" disabled selected hidden>Access Role</option>
+                              <option>Admin</option>
+                              <option>Supervisor</option>
+                              <option>User</option>
+                              </select>
+                            </div>
+                        </div>
+                        <button type="submit" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full  px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Submit</button>
+                    </form>
+                  </div>
                </div>
             </div>
+         </div> 
+
          </div>
          <!--    -----         1/4 of the first card      -----         -->
          <div class="w-1/4 flex items-center justify-center bg-gray-50 h-screen dark:bg-gray-800">
@@ -207,20 +302,72 @@
                </svg>
             </p>
          </div>
-         </div>
+       </div>
 
          <!--    -----         SECOND CARD      -----         -->
-        <div class="flex items-center justify-center h-48 mb-4  bg-gray-50 dark:bg-gray-800">
-           <p class="text-2xl text-gray-400 dark:text-gray-500">
-              <svg class="w-3.5 h-3.5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 18 18">
-                 <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 1v16M1 9h16"/>
-              </svg>
-           </p>
+        <div class=" h-screen mb-4  bg-gray-50 dark:bg-gray-800">
+           
+         <h2 class="flex text-2xl items-center justify-center h-16 font-bold tracking-tight text-gray-300 ">
+            Users List
+         </h2>
+            <div class=" ">
+               <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
+                  <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+                     <tr>
+                        <th scope="col" class="px-6 py-3">
+                           First Name
+                        </th>
+                        <th scope="col" class="px-6 py-3">
+                           Last Name
+                        </th>
+                        <th scope="col" class="px-6 py-3">
+                           Email
+                        </th>
+                        <th scope="col" class="px-6 py-3">
+                           Address
+                        </th>
+                        <th scope="col" class="px-6 py-3">
+                           Phone Number
+                        </th>
+                        <th scope="col" class="px-6 py-3">
+                           Gender
+                        </th>
+                        <th scope="col" class="px-6 py-3">
+                           Age
+                        </th>
+                        <th scope="col" class="px-6 py-3">
+                           Action
+                        </th>
+                        
+                     </tr>
+                  </thead>
+                  <tbody>
+                     <tr *ngFor="let user of users" class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
+                        <td class="px-6 py-4">{{ user.fname }}</td>
+                        <td class="px-6 py-4">{{ user.lname }}</td>
+                        <td class="px-6 py-4">{{ user.email }}</td>
+                        <td class="px-6 py-4">{{ user.address }}</td>
+                        <td class="px-6 py-4">{{ user.phonenumber }}</td>
+                        <td class="px-6 py-4">{{ user.gender }}</td>
+                        <td class="px-6 py-4">{{ user.age }}</td>
+                        <td>
+                        <button (click)="deleteUser(user.id)"class="px-6 py-4 bg-red-500 hover:bg-red-600 text-white font-bold py-1.5 px-4 rounded focus:outline-none focus:shadow-outline">
+                           Delete
+                        </button>
+                       </td>
+                     </tr>
+                  </tbody>
+               </table>
+            </div>
+
+
+           
+
         </div>
 
         
 
-        <div class="flex items-center justify-center h-48 mb-4 bg-gray-50 dark:bg-gray-800">
+        <!-- <div class="flex items-center justify-center h-48 mb-4 bg-gray-50 dark:bg-gray-800">
            <p class="text-2xl text-gray-400 dark:text-gray-500">
               <svg class="w-3.5 h-3.5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 18 18">
                  <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 1v16M1 9h16"/>
@@ -256,7 +403,7 @@
                  </svg>
               </p>
            </div>
-        </div>
+        </div> -->
      </div>
   </div>
   

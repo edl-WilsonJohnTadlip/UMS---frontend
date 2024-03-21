@@ -44,13 +44,13 @@ export class LoginComponent implements OnInit {
           
           // Route the user to the appropriate component based on their role
           switch (role) {
-            case 'Admin':
+            case 'admin':
               this.router.navigate(['admin']);
               break;
-            case 'Supervisor':
+            case 'supervisor':
               this.router.navigate(['supervisor']);
               break;
-            case 'User':
+            case 'user':
               this.router.navigate(['user']);
               break;
             default:

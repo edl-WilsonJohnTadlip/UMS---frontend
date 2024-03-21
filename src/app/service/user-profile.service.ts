@@ -33,7 +33,8 @@ export class UserProfileService {
     return this.http.get<AdminProfile>(url, { headers });
   }
 
-  updateAdminProfile(id: number, updatedProfile: AdminProfile): Observable<AdminProfile> {
+  updateAdminProfile(id: number, updatedProfile: AdminProfile): Observable<any> {
+    console.log('Updating admin profile:', updatedProfile);
     const url = `${this.apiUrl}/admin/${id}/profile`;
     const headers = this.createHeaders(); // Create headers with authentication token
     return this.http.put<AdminProfile>(url, updatedProfile, { headers });
@@ -44,4 +45,29 @@ export class UserProfileService {
     const headers = this.createHeaders(); // Create headers with authentication token
     return this.http.delete(url, { headers });
   }
+
+  //Method to fetch users based on logged-in user's role
+  getUsers(): Observable<any> {
+    const role = this.authService.getUserRole(); // Get the user's role
+    const headers = this.createHeaders(); // Create headers with authentication token
+
+    // API endpoint based on user's role
+    let endpoint = '';
+    if (role === 'admin') {
+      endpoint = `${this.apiUrl}/admin/users`;
+    } else if (role === 'supervisor') {
+      endpoint = `${this.apiUrl}/supervisor/users`;
+    }
+    
+    if (!endpoint) {
+      console.log('Invalid user role:', endpoint);
+    }
+
+    // Make HTTP GET request to fetch users
+    // return this.http.get<any>(endpoint, { headers });
+    return this.http.get<any>(endpoint, { headers })
+  }
+
+  
+
 }
