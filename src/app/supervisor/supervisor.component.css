@@ -1,0 +1,15 @@
+table {
+    width: 100%;
+  }
+
+.no-rounded {
+    border-radius: 0px;
+}
+
+.text-blue {
+    color: gray;
+}
+
+.text {
+    color: white;
+}

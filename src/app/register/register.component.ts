@@ -6,6 +6,7 @@ import { AuthService } from '../service/auth.service';
 import { AbstractControl } from '@angular/forms';
 import { HttpErrorResponse } from '@angular/common/http';
 import { ChangeDetectorRef } from '@angular/core';
+import { MessageService } from '../service/message.service';
 
 import { UserInterface } from '../user.interface';
 
@@ -24,7 +25,8 @@ export class RegisterComponent {
     private http: HttpClient,
     private router: Router,
     private authService: AuthService,
-    private cd: ChangeDetectorRef
+    private cd: ChangeDetectorRef,
+    public messageService: MessageService
     ) 
   {}
 
@@ -80,30 +82,30 @@ export class RegisterComponent {
       {
         console.log('response', response);
         this.generalSuccessMessage  = "You have successfully registered your account. Please login to continue.";
-          // Set a timeout to remove the success message after 3 seconds
-          setTimeout(() => {
-            this.generalSuccessMessage = '';
-            this.cd.detectChanges(); // Detect changes to update the view
-            }, 3000);
-            this.router.navigate(['/login']);
+         // Use the message service to show success message
+        this.messageService.setSuccessMessage(this.generalSuccessMessage);
+        // Set a timeout to remove the success message after 3 seconds
+        // setTimeout(() => {
+        //   this.generalSuccessMessage = "You have successfully registered your account. Please login to continue.";
+        //   this.cd.detectChanges(); // Detect changes to update the view
+        //   }, 3000);
+          this.router.navigate(['/login']);
       },
         (error: HttpErrorResponse) => {
           console.error('Error:', error);
-        // Handle error appropriately
-        this.generalErrorMessage = "Please correct the errors and try again.";
+          // Handle error appropriately
+          // Use the message service to show error message
+          this.messageService.setErrorMessage("Please correct the errors and try again.");
       }
       );
     } else {
+        // Mark all form controls as touched to trigger validation messages
         Object.values(this.form.controls).forEach(control => {
           control.markAsTouched();
           console.error('Form errors:', this.form.errors);
       });
-      // Optionally, display a general error message
-      setTimeout(() => {
-        this.generalErrorMessage = '';
-        this.cd.detectChanges(); // Detect changes to update the view
-        }, 2000);
-        this.generalErrorMessage = "Please correct the errors and try again.";
+        // Optionally, display a general error message
+        this.messageService.setErrorMessage("Please correct the errors and try again.");
     }
     }
   }

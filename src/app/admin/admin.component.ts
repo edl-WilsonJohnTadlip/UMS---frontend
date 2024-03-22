@@ -1,11 +1,12 @@
 import { Component } from '@angular/core';
 import { UserProfileService } from '../service/user-profile.service';
 import { AuthService } from '../service/auth.service';
-import { Router } from '@angular/router';
+import { Router, NavigationExtras } from '@angular/router';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { FormBuilder } from '@angular/forms';
 import { tap, throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
+import { MessageService } from '../service/message.service';
 
 @Component({
   selector: 'app-admin',
@@ -24,7 +25,8 @@ export class AdminComponent {
     private formBuilder: FormBuilder,
     private userProfileService: UserProfileService,
     private authService: AuthService,
-    private router: Router
+    private router: Router,
+    public messageService: MessageService
   ){}
 
   ngOnInit(): void {
@@ -70,10 +72,13 @@ export class AdminComponent {
       this.userProfileService.getAdminProfile(userId).subscribe({
         next: (data) => {
           this.adminProfile = data;
+          console.log('Admin profile:', this.adminProfile);
           this.profileForm.patchValue({
             email: this.adminProfile.email,
             fname: this.adminProfile.fname,
             lname: this.adminProfile.lname,
+            password: this.adminProfile.password,
+            repeat_password: this.adminProfile.password,
             address: this.adminProfile.address,
             phonenumber: this.adminProfile.phonenumber,
             gender: this.adminProfile.gender,
@@ -101,6 +106,8 @@ export class AdminComponent {
           email: this.adminProfile.email,
           fname: this.adminProfile.fname,
           lname: this.adminProfile.lname,
+          password: this.adminProfile.password,
+          repeat_password: this.adminProfile.password,
           address: this.adminProfile.address,
           phonenumber: this.adminProfile.phonenumber,
           gender: this.adminProfile.gender,
@@ -118,40 +125,12 @@ export class AdminComponent {
     });
   }
 
-  onSubmit() {
-    if (this.profileForm.value) {
-      // Prepare the data to be submitted
-      const updatedProfile = this.profileForm.value;
-      const userId = this.authService.getUserId(); // Retrieve the user ID from the authentication service
-      console.log(updatedProfile, userId);
-  
-      if (userId !== null) {
-        // Submit the form data
-        this.userProfileService.updateAdminProfile(userId, updatedProfile).subscribe({
-          next: (response) => {
-            // Handle successful submission
-            console.log('Profile updated successfully:', response);
-            // Optionally, navigate to a success page or display a success message
-            this.router.navigate(['/admin']); // Optionally, navigate to a success page
-          },
-          error: (error) => {
-            // Handle submission errors
-            console.error('Error updating profile:', error);
-            // Optionally, display an error message to the user
-          }
-        });
-      } else {
-        console.error('User ID is null.'); // Handle null user ID case
-      }
-    } else {
-      // Form is invalid, display error messages
-      this.validateAllFormFields(this.profileForm);
-    }
+  isProfileDataChanged(): boolean {
+    const currentProfileData = this.profileForm.value;
+    // Compare current profile data with the original adminProfile
+    return JSON.stringify(currentProfileData) !== JSON.stringify(this.adminProfile);
   }
 
-
-
-  
   // Helper method to validate all form fields and display error messages
   validateAllFormFields(formGroup: FormGroup) {
     Object.keys(formGroup.controls).forEach(field => {
@@ -163,6 +142,56 @@ export class AdminComponent {
       }
     });
   }
+
+  
+
+  onSubmit() {
+    if (this.profileForm.value) {
+      // Prepare the data to be submitted
+      if (this.isProfileDataChanged()) {
+      const userId = this.authService.getUserId(); // Retrieve the user ID from the authentication service
+      
+  
+      if (userId !== null) {
+        const updatedProfile = this.profileForm.value;
+        console.log(updatedProfile, userId);
+        // Submit the form data
+        this.userProfileService.updateAdminProfile(userId, updatedProfile).subscribe({
+          next: (response) => {
+            // Handle successful submission
+            console.log('Profile updated successfully:', response);
+            this.messageService.setSuccessMessage('Profile updated successfully'); // Display success toaster message
+            //resset the form
+            this.profileForm.reset();
+            // Fetch the updated profile data
+            this.initializeAdminProfile();
+            // Optionally, navigate to a success page or display a success message
+            this.router.navigate(['/admin']); // Optionally, navigate to a success page
+          },
+          error: (error) => {
+            // Handle submission errors
+            console.error('Error updating profile:', error);
+            // Optionally, display an error message to the user
+            // Display error toaster message
+            this.messageService.setErrorMessage('Error updating profile. Please try again.');
+          }
+        });
+      } else {
+        console.error('User ID is null.'); // Handle null user ID case
+        // Display error toaster message
+        this.messageService.setErrorMessage('Something went wrong. Please log in again.'); 
+      }
+      }
+      else {
+        // Display info toaster message
+        this.messageService.setSuccessMessage('No changes were made.'); 
+      }
+    } else {
+      // Form is invalid, display error messages
+      this.validateAllFormFields(this.profileForm);
+    }
+  }
+ 
 
   deleteUser(userId: number) {
     // Get the ID of the currently logged-in user
@@ -184,16 +213,19 @@ export class AdminComponent {
         )
         .subscribe(() => {
           // Update UI or perform any necessary actions on successful deletion
-          this.router.navigate(['/admin']);
+          const navigationExtras: NavigationExtras = {
+            replaceUrl: true
+          };
+          this.router.navigate([this.router.url], navigationExtras);
           console.log('User deleted successfully.');
-        }); // Subscribe to trigger the observable
+        });
       }
   }
 
   logout(): void {
       this.authService.logout(); // Call logout method from AuthService to clear user information
       this.router.navigate(['/login']); // Navigate to login page
-    }
+  }
 
 }
 

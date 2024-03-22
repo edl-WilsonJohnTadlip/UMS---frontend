@@ -1,12 +1,12 @@
 <section class="bg-gray-50 dark:bg-gray-900">
-    <div  id="toast-top-right" class="fixed flex items-center w-full max-w-xs p-4 space-x-4 text-gray-500 bg-white divide-x rtl:divide-x-reverse divide-gray-200 rounded-lg shadow top-5 right-5 dark:text-gray-400 dark:divide-gray-700 space-x dark:bg-gray-800" role="alert">
+    <div *ngIf="(messageService.getErrorMessage() | async) as errorMessage" id="toast-top-right" class="fixed flex items-center w-full max-w-xs p-4 space-x-4 text-gray-500 bg-white divide-x rtl:divide-x-reverse divide-gray-200 rounded-lg shadow top-5 right-5 dark:text-gray-400 dark:divide-gray-700 space-x dark:bg-gray-800" role="alert">
         <svg class="w-5 h-5 text-red-500" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
             <path d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5Zm3.707 11.793a1 1 0 1 1-1.414 1.414L10 11.414l-2.293 2.293a1 1 0 0 1-1.414-1.414L8.586 10 6.293 7.707a1 1 0 0 1 1.414-1.414L10 8.586l2.293-2.293a1 1 0 0 1 1.414 1.414L11.414 10l2.293 2.293Z"/>
         </svg>
-        <div class="text-sm font-normal">{{ generalErrorMessage }}</div>
+        <div class="text-sm font-normal">{{ errorMessage  }}</div>
     </div>
     
-    <div class="flex flex-col items-center justify-center px-6 py-2 mx-auto md:h-screen md:py-0">
+    <div class="flex flex-col items-center justify-center px-6 mx-auto md:h-screen md:py-0">
         <div class="w-4/5 bg-white rounded-lg shadow dark:border md:mt-0 sm:max-w-md xl:p-0 dark:bg-gray-800 dark:border-gray-700">
             <div class="p-6 space-y-4 md:space-y-6 sm:p-8">
                 <h1 class="text-xl text-center font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-white">
@@ -65,7 +65,7 @@
                     <input formControlName="phonenumber" type="tel" name="floating_phone" id="floating_phone" class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer" placeholder=" " required />
                     <label for="floating_phone" class="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">Phone # (10 digits)</label>
                     <!-- Error message for phone number required -->
-                    <div *ngIf="form.controls['phonenumber'].invalid && (form.controls['phonenumber'].dirty || form.controls['phonenumber'].touched) && form.controls['lname'].hasError('required')" class="text-red-500 text-xs mt-1">Phone number required.</div>
+                    <div *ngIf="form.controls['phonenumber'].invalid && (form.controls['phonenumber'].dirty || form.controls['phonenumber'].touched) && form.controls['phonenumber'].hasError('required')" class="text-red-500 text-xs mt-1">Phone number required.</div>
 
                     <!-- <div *ngIf="form.controls['phonenumber'].invalid && (form.controls['phonenumber'].dirty || form.controls['phonenumber'].touched)" class="text-red-500 text-xs mt-1">Phone number is required.</div> -->
                   </div>

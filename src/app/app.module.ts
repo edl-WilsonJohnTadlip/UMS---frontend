@@ -15,6 +15,7 @@ import { ProfileComponent } from './admin/profile/profile.component';
 import { DashboardComponent } from './admin/dashboard/dashboard.component';
 import { MatCardModule } from '@angular/material/card';
 import { MatButtonModule } from '@angular/material/button';
+import { MessageService } from './service/message.service';
 
 
 @NgModule({
@@ -38,6 +39,7 @@ import { MatButtonModule } from '@angular/material/button';
     MatButtonModule
   ],
   providers: [
+    MessageService,
     provideAnimationsAsync()
   ],
   bootstrap: [AppComponent]

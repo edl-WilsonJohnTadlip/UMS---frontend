@@ -3,6 +3,9 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { AuthService } from './auth.service';
 import { AdminProfile } from '../admin/admin-profile';
+import { catchError } from 'rxjs/operators';
+import { throwError } from 'rxjs';
+import { UserProfile } from '../user/user-profile';
 
 @Injectable({
   providedIn: 'root'
@@ -68,6 +71,19 @@ export class UserProfileService {
     return this.http.get<any>(endpoint, { headers })
   }
 
+  // Method to fetch user profile by user ID
+  getUserProfile(userId: number): Observable<any> {
+    const url = `${this.apiUrl}/user/${userId}/profile`; // Assuming apiUrl is defined
+    const headers = this.createHeaders(); // Create headers with authentication token
+    return this.http.get<any>(url, { headers }).pipe(
+      catchError((error: any) => {
+        console.error('Error fetching user profile:', error);
+        throw error; // Use throw to propagate the error
+      })
+    );
+  }
+
+  
   
 
 }

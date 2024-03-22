@@ -1,7 +1,8 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable, of } from 'rxjs';
-import { tap } from 'rxjs/operators';
+import { Observable, throwError } from 'rxjs';
+import { catchError, tap } from 'rxjs/operators';
+import { MessageService } from './message.service';
 
 @Injectable({
   providedIn: 'root'
@@ -10,18 +11,40 @@ export class AuthService {
   private apiUrl = 'http://127.0.0.1:8000/api/auth'; // backend API URL
   private userId: number | null = null; // User ID stored in memory
 
-  constructor(private http: HttpClient) { }
+  constructor(
+    private http: HttpClient,
+    public messageService: MessageService
+    ) { }
 
   login(credentials: { username: string, password: string }): Observable<any> {
     return this.http.post<any>(`${this.apiUrl}/login/`, credentials).pipe(
       tap(response => {
         if (response && response.access_token) {
+          this.handleLoginSuccess(response);
           localStorage.setItem('token', response.access_token);
           localStorage.setItem('role', response.role[0]);
           localStorage.setItem('user_id', response.user_id.toString());      
         }
+      }),
+      catchError(error => {
+        this.handleLoginError(error);
+        return throwError(() => error);
       })
     );
+  }
+
+  private handleLoginSuccess(response: any): void {
+    localStorage.setItem('token', response.access_token);
+    localStorage.setItem('role', response.role[0]);
+    localStorage.setItem('user_id', response.user_id.toString());
+  }
+
+  private handleLoginError(error: any): void {
+    if (error && error.error && error.error.message) {
+      this.messageService.setErrorMessage(error.error.message);
+    } else {
+      this.messageService.setErrorMessage('An error occurred. Please try again later.');
+    }
   }
 
   logout(): void {
