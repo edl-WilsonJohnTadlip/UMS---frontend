@@ -83,6 +83,45 @@ export class UserProfileService {
     );
   }
 
+  // Method to fetch pre-existing skills from the backend API
+  fetchSkills(): Observable<string[]> {
+    const url = `${this.apiUrl}/skills/index`;
+    const headers = this.createHeaders(); // Create headers with authentication token
+    return this.http.get<string[]>(url, { headers });
+  }
+
+  // Method to fetch skills associated with the logged-in user
+   // Method to fetch skills associated with the logged-in user
+   getUserSkills(): Observable<string[]> {
+    const userId = this.authService.getUserId(); // Get the user's ID
+    if (!userId) {
+      // Handle case when user ID is not available
+      throw new Error('User ID not found');
+    }
+    const url = `${this.apiUrl}/skills/index/${userId}`; // API endpoint for fetching user skills
+    const headers = this.createHeaders(); // Create headers with authentication token
+    return this.http.get<string[]>(url, { headers }).pipe(
+      catchError((error: any) => {
+        console.error('Error fetching user skills:', error);
+        throw error; // Propagate the error using the throw keyword
+      })
+    );
+  }
+
+  addSkillToUser(skill: string): Observable<any> {
+    const userId = this.authService.getUserId();
+    const url = `${this.apiUrl}/skills/store/${userId}`; // Adjust endpoint as per your API
+    const headers = this.createHeaders();
+    return this.http.post(url, { skill }, { headers });
+  }
+
+  removeSkillFromUser(skill: string): Observable<any> {
+    const userId = this.authService.getUserId();
+    const url = `${this.apiUrl}/skills/destroy/${userId}`; // Adjust endpoint as per your API
+    const headers = this.createHeaders();
+    return this.http.delete(url, { headers });
+  }
+
   
   
 

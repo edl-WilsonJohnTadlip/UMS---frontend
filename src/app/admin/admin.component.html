@@ -310,7 +310,7 @@
             <div class="w-full bg-white dark:bg-gray-800 relative shadow-md sm:rounded-lg overflow-hidden">
                 <div class="flex flex-col md:flex-row items-start justify-between space-y-3 md:space-y-0 md:space-x-4 p-4">
                     
-                    <button id="dropdownDefaultButton" data-dropdown-toggle="dropdown" class="text-white dark:bg-gray-700 hover:bg-gray-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-10 py-2.5 text-center inline-flex items-center dark:bg-blue-600 dark:hover:bg-gray-500 dark:focus:ring-blue-800" type="button">
+                    <button id="dropdownDefaultButton" data-dropdown-toggle="dropdown" class="text-white dark:bg-gray-700 hover:bg-gray-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-10 py-2.5 text-center inline-flex items-center dark:bg-blue-600 dark:hover:bg-gray-500 dark:focus:ring-blue-800 w-full" type="button">
                         Add Existing Skill
                         <svg class="w-2.5 h-2.5 ms-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 6">
                         <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 4 4 4-4"/>
@@ -319,17 +319,14 @@
                         
                         <!-- Dropdown menu -->
                     <div id="dropdown" class="z-10 hidden bg-white border border-blue-600 divide-y divide-gray-100 rounded-lg shadow w-44 dark:bg-gray-700">
-                        <ul class="py-2 text-sm text-gray-700 dark:text-gray-200 rounded-lg" aria-labelledby="dropdownDefaultButton">
-                           <li>
+                        <ul class="py-2 text-sm text-gray-700 dark:text-gray-200 rounded-lg overflow-y-auto min-h-[5rem] max-h-[8rem]" aria-labelledby="dropdownDefaultButton">
+                           <li *ngFor="let skill of skills">
                               <!-- List of pre existing skills from the database that user can select to add -->
-                              <a href="#" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">javascript</a> 
+                              <a href="#" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white" (click)="onSelectSkill(skill)"> {{ skill }} </a> 
                           </li>                          
                         </ul>    
                      </div>
-                     <!-- button to add to the table coming from the existing skills from the table -->
-                     <button type="button" class="flex items-center text-center justify-center text-white bg-primary-700 hover:bg-primary-800 focus:ring-4 focus:ring-primary-300 font-medium rounded-lg text-sm px-8 py-2.5 dark:bg-primary-600 dark:hover:bg-primary-700 focus:outline-none dark:focus:ring-primary-800">
-                        Add
-                     </button>   
+
                 </div>
                 <div class="flex flex-col md:flex-row items-start justify-between space-y-2 md:space-y-0 md:space-x-4 pb-2 px-4">
                     <form class="w-full">   
@@ -354,20 +351,13 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <tr class="border-b dark:border-gray-700">
-                                <th scope="row" class="px-7 py-3 font-medium text-gray-900 whitespace-nowrap dark:text-white">Javascript</th>
+                            <tr *ngFor="let skill of userSkills" class="border-b dark:border-gray-700">
+                                <th scope="row" class="px-7 py-3 font-medium text-gray-900 whitespace-nowrap dark:text-white">{{ skill }}</th>
                                 <td class="px-2 py-3 relative">
                                     <button class="absolute top-1/2 transform -translate-y-1/2 px-4 py-1.5 bg-red-500 hover:bg-red-600 text-white font-bold rounded focus:outline-none focus:shadow-outline">Remove
                                     </button>
                                 </td>
-                            </tr>
-                            <tr class="border-b dark:border-gray-700">
-                                <th scope="row" class="px-7 py-3 font-medium text-gray-900 whitespace-nowrap dark:text-white">React</th>
-                                <td class="px-2 py-3 relative">
-                                    <button class="absolute top-1/2 transform -translate-y-1/2 px-4 py-1.5 bg-red-500 hover:bg-red-600 text-white font-bold rounded focus:outline-none focus:shadow-outline">Remove
-                                    </button>
-                                </td>
-                            </tr>
+                            </tr>                            
                         </tbody>
                     </table>
                   </div>

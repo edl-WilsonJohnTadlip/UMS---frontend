@@ -4,7 +4,7 @@ import { AuthService } from '../service/auth.service';
 import { Router, NavigationExtras } from '@angular/router';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { FormBuilder } from '@angular/forms';
-import { tap, throwError } from 'rxjs';
+import { of, throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { MessageService } from '../service/message.service';
 
@@ -20,6 +20,10 @@ export class AdminComponent {
   adminProfile: any;
   selectedGender: string | null = null;
   profileForm: FormGroup; // Define profileForm as a FormGroup
+  
+  skills: string[] = []; // Array to store fetched skills
+  selectedSkill: string | undefined; // Variable to store the selected skill from the dropdown
+  userSkills: any[] = [];
 
   constructor(
     private formBuilder: FormBuilder,
@@ -33,6 +37,8 @@ export class AdminComponent {
     this.initializeAdminProfile();
     this.initializeForm(); // Initialize the form
     this.fetchUsers(); // Fetch users
+    this.fetchSkills(); // Fetch skills when the component initializes
+    this.fetchUserSkills()
   }
 
   initializeForm(): void {
@@ -51,6 +57,63 @@ export class AdminComponent {
     });
   }
 
+  fetchSkills(): void {
+    this.userProfileService.fetchSkills().subscribe(
+      skills => {
+        this.skills = skills; // Store fetched skills in the array
+      },
+      error => {
+        console.error('Error fetching skills:', error);
+        // Handle error
+      }
+    );
+  }
+
+  fetchUserSkills(): void {
+    this.userProfileService.getUserSkills().subscribe(
+      (skills: string[]) => {
+        console.log('Fetched user skills:', skills);
+        this.userSkills = skills;
+      },
+      (error) => {
+        console.error('Error fetching user skills:', error);
+      }
+    );
+  }
+
+  onSelectSkill(skill: string): void {
+    this.selectedSkill = skill; // Set the selected skill
+  }
+
+  // Method to add the selected skill to the user's skills table
+  addSelectedSkill(): void {
+    if (this.selectedSkill) {
+      // Check if the user is authenticated
+      if (this.authService.isLoggedIn()) {
+        // User is authenticated, proceed with adding the skill
+        this.userProfileService.addSkillToUser(this.selectedSkill).pipe(
+          catchError((error) => {
+            // Log the error
+            console.error('Error adding selected skill:', error);
+            // Handle the error gracefully
+            // You can also return an observable with a fallback value or rethrow the error
+            return of(null); // Returning of(null) will allow the subscription to continue without error
+          })
+        ).subscribe(
+          () => {
+            // Handle success
+            console.log('Selected skill added to user:', this.selectedSkill);
+          }
+        );
+      } else {
+        // User is not authenticated, redirect to the login page
+        this.router.navigate(['/login']);
+      }
+    } else {
+      // Handle case when no skill is selected
+    }
+  }
+  
   fetchUsers(): void {
     this.userProfileService.getUsers().subscribe(
       (data) => {
